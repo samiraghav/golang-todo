@@ -13,8 +13,8 @@ GoLang Todo is a simple web application for managing todos built with GoLang and
 
 Before running the application, make sure you have the following installed:
 
-- Go programming language (version X.X.X)
-- MySQL database (version X.X.X)
+- Go programming language 
+- MySQL database
 
 ## Installation
 
