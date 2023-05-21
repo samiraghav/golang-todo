@@ -63,7 +63,6 @@ func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// simple validation
 	if t.Title == "" {
 		writeJSONResponse(w, http.StatusBadRequest, map[string]interface{}{
 			"error": "The title field is required",
@@ -71,7 +70,6 @@ func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if input is okay, create a todo
 	stmt, err := db.Prepare("INSERT INTO " + tableName + " (title, completed, created_at) VALUES (?, ?, ?)")
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
@@ -111,7 +109,6 @@ func updateTodoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// simple validation
 	if t.Title == "" {
 		writeJSONResponse(w, http.StatusBadRequest, map[string]interface{}{
 			"error": "The title field is required",
@@ -119,7 +116,6 @@ func updateTodoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if input is okay, update a todo
 	stmt, err := db.Prepare("UPDATE " + tableName + " SET title=?, completed=? WHERE id=?")
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
@@ -205,7 +201,7 @@ func writeJSONResponse(w http.ResponseWriter, statusCode int, data interface{}) 
 }
 
 func main() {
-	stopChan := make(chan os.Signal)
+	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, os.Interrupt)
 
 	r := mux.NewRouter()

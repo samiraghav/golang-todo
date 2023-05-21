@@ -39,6 +39,7 @@ Modify the database connection details in the main.go file if necessary.
 5. Build and run the application:
 
 go build
+
 ./golang-todo
 
 6. Access the application in your web browser at http://localhost:9000.
