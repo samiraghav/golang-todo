@@ -29,7 +29,7 @@ const (
 )
 
 type (
-	Todo struct {
+	todo struct {
 		ID        int64     `json:"id"`
 		Title     string    `json:"title"`
 		Completed bool      `json:"completed"`
@@ -54,16 +54,16 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func createTodoHandler(w http.ResponseWriter, r *http.Request) {
-	var todoData Todo
+	var t todo
 
-	if err := json.NewDecoder(r.Body).Decode(&todoData); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	if todoData.Title == "" {
+	if t.Title == "" {
 		writeJSONResponse(w, http.StatusBadRequest, map[string]interface{}{
 			"error": "The title field is required",
 		})
@@ -79,7 +79,7 @@ func createTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(todoData.Title, false, time.Now())
+	result, err := stmt.Exec(t.Title, false, time.Now())
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
 			"error": "Failed to save todo: " + err.Error(),
@@ -100,7 +100,7 @@ func updateTodoHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	var t Todo
+	var t todo
 
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
@@ -149,16 +149,16 @@ func fetchTodosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer rows.Close()
 
-	todoList := []Todo{}
+	todoList := []todo{}
 	for rows.Next() {
-		var todoData Todo
-		err := rows.Scan(&todoData.ID, &todoData.Title, &todoData.Completed, &todoData.CreatedAt)
+		var t todo
+		err := rows.Scan(&t.ID, &t.Title, &t.Completed, &t.CreatedAt)
 		if err != nil {
 			log.Println(err)
 			continue
 		}
 
-		todoList = append(todoList, todoData)
+		todoList = append(todoList, t)
 	}
 
 	response := map[string]interface{}{
@@ -201,24 +201,24 @@ func writeJSONResponse(w http.ResponseWriter, statusCode int, data interface{}) 
 }
 
 func main() {
-	stopSignalChan := make(chan os.Signal, 1)
-	signal.Notify(stopSignalChan, os.Interrupt)
+	stopChan := make(chan os.Signal, 1)
+	signal.Notify(stopChan, os.Interrupt)
 
-	router := mux.NewRouter()
-	router.HandleFunc("/", homeHandler)
-	router.HandleFunc("/todo", fetchTodosHandler).Methods("GET")
-	router.HandleFunc("/todo", createTodoHandler).Methods("POST")
-	router.HandleFunc("/todo/{id}", updateTodoHandler).Methods("PUT")
-	router.HandleFunc("/todo/{id}", deleteTodoHandler).Methods("DELETE")
+	r := mux.NewRouter()
+	r.HandleFunc("/", homeHandler)
+	r.HandleFunc("/todo", fetchTodosHandler).Methods("GET")
+	r.HandleFunc("/todo", createTodoHandler).Methods("POST")
+	r.HandleFunc("/todo/{id}", updateTodoHandler).Methods("PUT")
+	r.HandleFunc("/todo/{id}", deleteTodoHandler).Methods("DELETE")
 
 	// Serve static files
 	staticDir := "/static/"
 	staticHandler := http.StripPrefix(staticDir, http.FileServer(http.Dir("./static")))
-	router.PathPrefix(staticDir).Handler(staticHandler)
+	r.PathPrefix(staticDir).Handler(staticHandler)
 
 	srv := &http.Server{
 		Addr:         port,
-		Handler:      router,
+		Handler:      r,
 		ReadTimeout:  60 * time.Second,
 		WriteTimeout: 60 * time.Second,
 		IdleTimeout:  60 * time.Second,
@@ -231,7 +231,7 @@ func main() {
 		}
 	}()
 
-	<-stopSignalChan
+	<-stopChan
 	log.Println("Shutting down server...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	srv.Shutdown(ctx)
