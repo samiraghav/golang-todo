@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"..//db"
-	"../models"
+	"github.com/samiraghav/golang-todo/backend/db"
+	"github.com/samiraghav/golang-todo/backend/models"
 )
 
 func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {

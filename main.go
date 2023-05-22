@@ -5,9 +5,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"golang-todo/backend/controllers"
-	"golang-todo/backend/db"
-	"golang-todo/backend/routes"
+	"github.com/samiraghav/golang-todo/backend/controllers"
+	"github.com/samiraghav/golang-todo/backend/db"
+	"github.com/samiraghav/golang-todo/backend/routes"
 )
 
 func main() {
