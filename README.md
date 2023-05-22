@@ -42,9 +42,6 @@ Before running the application, make sure you have the following installed:
 
 5. Build and run the application:
 
-   go build
-   <!-- Compile the application into an executable binary -->
-
    ./golang-todo
    <!-- Execute the application -->
 
