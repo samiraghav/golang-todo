@@ -1,4 +1,4 @@
-module github.com/samiraghav/golang-todo
+module github.com/samiraghav/golang-todo/backend
 
 go 1.20
 

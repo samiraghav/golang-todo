@@ -1,4 +1,4 @@
-package controllers
+package crudOps
 
 import (
 	"encoding/json"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/samiraghav/golang-todo/db"
-	"github.com/samiraghav/golang-todo/models"
+	db "github.com/samiraghav/golang-todo/backend/database"
+	"github.com/samiraghav/golang-todo/backend/models"
 )
 
 func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {

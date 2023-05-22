@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/samiraghav/golang-todo/backend/controllers"
-	"github.com/samiraghav/golang-todo/backend/db"
+	controllers "github.com/samiraghav/golang-todo/backend/controllers"
+	db "github.com/samiraghav/golang-todo/backend/database"
 	"github.com/samiraghav/golang-todo/backend/routes"
 )
 
