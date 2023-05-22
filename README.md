@@ -21,41 +21,34 @@ Before running the application, make sure you have the following installed:
 1. Clone the repository:
 
    git clone https://github.com/samiraghav/golang-todo.git
-   <!-- Clone the repository to your local machine -->
 
 2. Navigate to the project directory:
 
-   cd golang-todo
-   <!-- Change your working directory to the project directory -->
+cd golang-todo
 
 3. Install the dependencies:
 
-   go mod download
-   <!-- Download and install the required dependencies -->
+go mod download
 
 4. Set up the MySQL database:
 
-   Create a new database named todo_app in your MySQL server.
+Create a new database named todo_app in your MySQL server.
 
-   Modify the database connection details in the main.go file if necessary.
-   <!-- Create a new database and configure the connection details in `main.go` if required -->
+Modify the database connection details in the main.go file if necessary.
 
 5. Build and run the application:
 
-   go build
-   <!-- Compile the application into an executable binary -->
+go build
 
-   ./golang-todo
-   <!-- Execute the application -->
+./golang-todo
 
 6. Access the application in your web browser at http://localhost:9000.
-<!-- Open your web browser and visit the provided URL to access the application -->
 
 ## API Endpoints
-- GET /todo: Fetch all todos.
+GET /todo: Fetch all todos.
 
-- POST /todo: Create a new todo.
+POST /todo: Create a new todo.
 
-- PUT /todo/{id}: Update an existing todo.
+PUT /todo/{id}: Update an existing todo.
 
-- DELETE /todo/{id}: Delete a todo.
+DELETE /todo/{id}: Delete a todo.
