@@ -30,6 +30,12 @@ Before running the application, make sure you have the following installed:
    cd golang-todo
    ```
 
+3. Navigate to the backend folder in golang-todo directory
+
+   ```
+   cd backend
+   ```
+
 3. Install the dependencies:
 
    ```
@@ -46,10 +52,10 @@ Before running the application, make sure you have the following installed:
    Modify the database connection details in the main.go file if necessary.
    ```
 
-5. Build and run the application:
+5. Run the application:
 
    ```
-   ./golang-todo
+   go run main.go
    ```
 
 6. Access the application in your web browser at 
