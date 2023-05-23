@@ -1,23 +1,25 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <title>Todo</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" type="text/css" href="./frontend/style.css">
 </head>
-<body>
-<div class="todo-container">
-  <h1 class="todo-title">Daily Todo List</h1>
-  <form class="todo-form" onsubmit="event.preventDefault();">
-    <input type="text" id="todo-input" class="todo-input" placeholder="Add your todo" />
-    <button class="todo-button" onclick="addTodo()">
-      Add
-    </button>
-  </form>
-  <ul class="todo-list" id="todo-list"></ul>
-</div>
 
-<script src="./frontend/script.js"></script>
+<body>
+  <div class="todo-container">
+    <h1 class="todo-title">Daily Todo List</h1>
+    <form class="todo-form" onsubmit="event.preventDefault();">
+      <input type="text" id="input" class="todo-input" placeholder="Add your todo" />
+      <button class="todo-button" onclick="addTodo()">
+        Add
+      </button>
+    </form>
+    <ul id="list" class="todo-list"></ul>
+  </div>
+  <script src="./frontend/script.js"></script>
 </body>
+
 </html>
