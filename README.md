@@ -44,13 +44,9 @@ Before running the application, make sure you have the following installed:
 
 4. Set up the MySQL database:
 
-   ```
    Create a new database named todo_app in your MySQL server.
-   ```
 
-   ```
    Modify the database connection details in the main.go file if necessary.
-   ```
 
 5. Run the application:
 
