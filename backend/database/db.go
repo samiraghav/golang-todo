@@ -25,9 +25,64 @@ func InitDB() error {
 		return err
 	}
 	database = dbConn
+
+	// Create the schema if it doesn't exist
+	err = createSchema()
+	if err != nil {
+		return err
+	}
+
+	// Connect to the specific database
+	err = database.Ping()
+	if err != nil {
+		return err
+	}
+	database.Exec("USE " + dbName)
+
+	// Create the table if it doesn't exist
+	err = createTable()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func GetDB() *sql.DB {
 	return database
+}
+
+func createSchema() error {
+	// Open a connection to the MySQL server without selecting a database
+	conn, err := sql.Open(dbDriver, dbUsername+":"+dbPassword+"@tcp("+dbHost+":"+dbPort+")/?parseTime=true")
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	// Create the schema if it doesn't exist
+	_, err = conn.Exec("CREATE DATABASE IF NOT EXISTS " + dbName)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createTable() error {
+	// Create the SQL query to create the table
+	query := `CREATE TABLE IF NOT EXISTS ` + TableName + ` (
+		id INT AUTO_INCREMENT PRIMARY KEY,
+		title VARCHAR(255),
+		completed BOOLEAN,
+		created_at DATETIME
+	)`
+
+	// Execute the query
+	_, err := database.Exec(query)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
