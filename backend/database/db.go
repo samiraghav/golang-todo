@@ -86,3 +86,22 @@ func createTable() error {
 
 	return nil
 }
+
+func AddTodoTask(title string, completed bool) (int64, error) {
+	// Prepare the SQL query for inserting a new todo task
+	query := "INSERT INTO " + TableName + " (title, completed, created_at) VALUES (?, ?, NOW())"
+
+	// Execute the query and retrieve the inserted ID
+	result, err := database.Exec(query, title, completed)
+	if err != nil {
+		return 0, err
+	}
+
+	// Get the last inserted ID
+	insertedID, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return insertedID, nil
+}

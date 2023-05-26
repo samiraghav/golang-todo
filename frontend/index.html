@@ -12,10 +12,8 @@
   <div class="todo-container">
     <h1 class="todo-title">Daily Todo List</h1>
     <form class="todo-form" onsubmit="event.preventDefault();">
-      <input type="text" id="input" class="todo-input" placeholder="Add your todo" />
-      <button class="todo-button" onclick="addTodo()">
-        Add
-      </button>
+      <input type="text" id="new-todo-input" class="todo-input" placeholder="Enter todo title">
+      <button type="button" id="add-todo-button" class="todo-button">Add Todo</button>
     </form>
     <ul id="list" class="todo-list"></ul>
   </div>

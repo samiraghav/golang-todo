@@ -29,7 +29,7 @@ func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert the todo into the database
-	result, err := db.GetDB().Exec("INSERT INTO "+db.TableName+" (title, completed, created_at) VALUES (?, ?, NOW())", todo.Title, todo.Completed)
+	insertedID, err := db.AddTodoTask(todo.Title, todo.Completed)
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
 			"error": "Failed to create todo",
@@ -37,11 +37,9 @@ func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	insertID, _ := result.LastInsertId()
-
 	response := map[string]interface{}{
 		"message": "Todo created successfully",
-		"todo_id": insertID,
+		"todo_id": insertedID,
 	}
 	writeJSONResponse(w, http.StatusCreated, response)
 }
