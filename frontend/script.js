@@ -1,5 +1,5 @@
 var todoList = document.getElementById('list');
-var todoInput = document.getElementById('input');
+var todoInput = document.getElementById('new-todo-input');
 var todos = [];
 
 function renderTodoList() {
