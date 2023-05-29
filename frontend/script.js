@@ -34,15 +34,52 @@ function addTodo() {
 
 function editTodo(index) {
   var todo = todos[index];
-  todoInput.value = todo.title;
-  todos.splice(index, 1);
-  renderTodoList();
+  var newTitle = todoInput.value.trim();
+
+  // Make sure the new title is not empty
+  if (newTitle === '') {
+    todoInput.classList.add('error');
+    return;
+  }
+
+  // Make the AJAX PUT request
+  var xhr = new XMLHttpRequest();
+  xhr.open('PUT', '/todo/' + todo.id);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Todo updated successfully
+      todo.title = newTitle;
+      renderTodoList();
+      todoInput.value = '';
+    } else {
+      // Failed to update todo
+      console.error('Failed to update todo');
+    }
+  };
+  xhr.send(JSON.stringify({ title: newTitle, completed: todo.completed }));
 }
 
+
 function deleteTodo(index) {
-  todos.splice(index, 1);
-  renderTodoList();
+  var todo = todos[index];
+
+  // Make the AJAX DELETE request
+  var xhr = new XMLHttpRequest();
+  xhr.open('DELETE', '/todo/' + todo.id);
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Todo deleted successfully
+      todos.splice(index, 1);
+      renderTodoList();
+    } else {
+      // Failed to delete todo
+      console.error('Failed to delete todo');
+    }
+  };
+  xhr.send();
 }
+
 
 // Function to make an AJAX POST request to create a new todo
 function createTodo() {
@@ -87,6 +124,29 @@ function createTodo() {
     xhr.send(JSON.stringify(todo));
   }
 }
+
+// Function to make an AJAX GET request to fetch all todos
+function fetchTodos() {
+  // Make the AJAX GET request
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/todo');
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Todos fetched successfully
+      var response = JSON.parse(xhr.responseText);
+      todos = response.data;
+      renderTodoList();
+    } else {
+      // Failed to fetch todos
+      console.error('Failed to fetch todos');
+    }
+  };
+  xhr.send();
+}
+
+// Call fetchTodos() when the page is loaded to retrieve todos
+fetchTodos();
+
 
 // Event listener for the add todo button click
 var addTodoButton = document.getElementById('add-todo-button');
