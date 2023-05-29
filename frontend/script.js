@@ -36,9 +36,6 @@ function editTodo(index) {
     }
   };
   deleteXhr.send();
-  
-  todos.splice(index, 1);
-  renderTodoList();
 }
 
 function deleteTodo(index) {
