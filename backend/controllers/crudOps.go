@@ -66,7 +66,7 @@ func UpdateTodoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update the todo in the database
-	_, err = db.GetDB().Exec("UPDATE "+db.TableName+" SET title=?, completed=? WHERE id=?", todo.Title, todo.Completed, id)
+	_, err = db.GetDB().Exec("UPDATE "+db.TableName+" SET title=?, completed=?, updated_at=NOW() WHERE id=?", todo.Title, todo.Completed, id)
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
 			"error": "Failed to update todo",

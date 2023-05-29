@@ -19,24 +19,39 @@ function renderTodoList() {
 function editTodo(index) {
   var todo = todos[index];
   todoInput.value = todo.title;
-  
-  // Make the AJAX DELETE request to delete the last edited todo
-  var deleteXhr = new XMLHttpRequest();
-  deleteXhr.open('DELETE', '/todo/' + todo.id);
-  deleteXhr.onload = function () {
-    if (deleteXhr.status === 200) {
-      // Last edited todo deleted successfully
-      
-      // Remove the last edited todo from the frontend list
-      todos.splice(index, 1);
-      renderTodoList();
-    } else {
-      // Failed to delete last edited todo
-      console.error('Failed to delete last edited todo');
+  var updateButton = document.createElement('button');
+  updateButton.textContent = 'Update';
+  updateButton.className = 'todo-button';
+  updateButton.addEventListener('click', function () {
+    var newTitle = todoInput.value.trim();
+    if (newTitle !== '') {
+      // Make the AJAX PUT request to update the todo
+      var updateXhr = new XMLHttpRequest();
+      updateXhr.open('PUT', '/todo/' + todo.id);
+      updateXhr.setRequestHeader('Content-Type', 'application/json');
+      updateXhr.onload = function () {
+        if (updateXhr.status === 200) {
+          // Todo updated successfully
+          todo.title = newTitle;
+          renderTodoList();
+        } else {
+          // Failed to update todo
+          console.error('Failed to update todo');
+        }
+      };
+      var updatedTodo = {
+        id: todo.id,
+        title: newTitle,
+        completed: todo.completed
+      };
+      updateXhr.send(JSON.stringify(updatedTodo));
     }
-  };
-  deleteXhr.send();
+    todoInput.value = '';
+    todoInput.parentNode.removeChild(updateButton);
+  });
+  todoInput.parentNode.appendChild(updateButton);
 }
+
 
 function deleteTodo(index) {
   var todo = todos[index];
