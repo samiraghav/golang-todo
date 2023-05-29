@@ -16,50 +16,30 @@ function renderTodoList() {
   });
 }
 
-function addTodo() {
-  var title = todoInput.value.trim();
-  if (title === '') {
-    todoInput.classList.add('error');
-  } else {
-    todoInput.classList.remove('error');
-    var todo = {
-      title: title,
-      completed: false
-    };
-    todos.push(todo);
-    renderTodoList();
-    todoInput.value = '';
-  }
-}
-
 function editTodo(index) {
   var todo = todos[index];
-  var newTitle = todoInput.value.trim();
-
-  // Make sure the new title is not empty
-  if (newTitle === '') {
-    todoInput.classList.add('error');
-    return;
-  }
-
-  // Make the AJAX PUT request
-  var xhr = new XMLHttpRequest();
-  xhr.open('PUT', '/todo/' + todo.id);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      // Todo updated successfully
-      todo.title = newTitle;
+  todoInput.value = todo.title;
+  
+  // Make the AJAX DELETE request to delete the last edited todo
+  var deleteXhr = new XMLHttpRequest();
+  deleteXhr.open('DELETE', '/todo/' + todo.id);
+  deleteXhr.onload = function () {
+    if (deleteXhr.status === 200) {
+      // Last edited todo deleted successfully
+      
+      // Remove the last edited todo from the frontend list
+      todos.splice(index, 1);
       renderTodoList();
-      todoInput.value = '';
     } else {
-      // Failed to update todo
-      console.error('Failed to update todo');
+      // Failed to delete last edited todo
+      console.error('Failed to delete last edited todo');
     }
   };
-  xhr.send(JSON.stringify({ title: newTitle, completed: todo.completed }));
+  deleteXhr.send();
+  
+  todos.splice(index, 1);
+  renderTodoList();
 }
-
 
 function deleteTodo(index) {
   var todo = todos[index];
