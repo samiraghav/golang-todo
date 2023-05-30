@@ -16,7 +16,6 @@ function renderTodoList() {
   });
 }
 
-// Event listener for the add todo button click
 var addTodoButton = document.getElementById('add-todo-button');
 addTodoButton.addEventListener('click', createTodo);
 
@@ -34,6 +33,9 @@ function editTodo(index) {
     updateButton = document.createElement('button');
     updateButton.textContent = 'Update';
     updateButton.className = 'todo-button update-todo-button';
+
+    // Replace the add todo button with the update button
+    addTodoButton.parentNode.replaceChild(updateButton, addTodoButton);
 
     updateButton.addEventListener('click', function () {
       var newTitle = todoInput.value.trim();
@@ -65,14 +67,13 @@ function editTodo(index) {
       }
 
       todoInput.value = '';
-      todoInput.parentNode.removeChild(updateButton);
+      todoInput.parentNode.replaceChild(addTodoButton, updateButton);
       // Enable the add todo button after canceling the edit
       addTodoButton.disabled = false;
     });
-
-    todoInput.parentNode.appendChild(updateButton);
   }
 }
+
 
 function deleteTodo(index) {
   var todo = todos[index];
