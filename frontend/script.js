@@ -1,6 +1,7 @@
 var todoList = document.getElementById('list');
 var todoInput = document.getElementById('new-todo-input');
 var todos = [];
+var editingIndex = -1; // Track the index of the todo being edited
 
 function renderTodoList() {
   todoList.innerHTML = '';
@@ -20,6 +21,7 @@ var addTodoButton = document.getElementById('add-todo-button');
 addTodoButton.addEventListener('click', createTodo);
 
 function editTodo(index) {
+  editingIndex = index; // Update the editing index
   var todo = todos[index];
   todoInput.value = todo.title;
 
@@ -40,14 +42,15 @@ function editTodo(index) {
     updateButton.addEventListener('click', function () {
       var newTitle = todoInput.value.trim();
       if (newTitle !== '') {
+        var editingTodo = todos[editingIndex]; // Use the editing index
         // Make the AJAX PUT request to update the todo
         var updateXhr = new XMLHttpRequest();
-        updateXhr.open('PUT', '/todo/' + todo.id);
+        updateXhr.open('PUT', '/todo/' + editingTodo.id);
         updateXhr.setRequestHeader('Content-Type', 'application/json');
         updateXhr.onload = function () {
           if (updateXhr.status === 200) {
             // Todo updated successfully
-            todo.title = newTitle;
+            editingTodo.title = newTitle;
             renderTodoList();
           } else {
             // Failed to update todo
@@ -55,12 +58,13 @@ function editTodo(index) {
           }
           // Enable the add todo button after updating
           addTodoButton.disabled = false;
+          editingIndex = -1; // Reset the editing index
         };
 
         var updatedTodo = {
-          id: todo.id,
+          id: editingTodo.id,
           title: newTitle,
-          completed: todo.completed
+          completed: editingTodo.completed
         };
 
         updateXhr.send(JSON.stringify(updatedTodo));
@@ -70,9 +74,11 @@ function editTodo(index) {
       todoInput.parentNode.replaceChild(addTodoButton, updateButton);
       // Enable the add todo button after canceling the edit
       addTodoButton.disabled = false;
+      editingIndex = -1; // Reset the editing index
     });
   }
 }
+
 
 
 function deleteTodo(index) {
