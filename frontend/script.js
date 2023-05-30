@@ -39,6 +39,12 @@ function editTodo(index) {
     // Replace the add todo button with the update button
     addTodoButton.parentNode.replaceChild(updateButton, addTodoButton);
 
+    // Disable the delete buttons of all todos
+    var deleteButtons = document.querySelectorAll('.delete-todo-button');
+    deleteButtons.forEach(function (button) {
+      button.disabled = true;
+    });
+
     updateButton.addEventListener('click', function () {
       var newTitle = todoInput.value.trim();
       if (newTitle !== '') {
@@ -74,11 +80,17 @@ function editTodo(index) {
       todoInput.parentNode.replaceChild(addTodoButton, updateButton);
       // Enable the add todo button after canceling the edit
       addTodoButton.disabled = false;
+
+      // Enable the delete buttons of all todos
+      var deleteButtons = document.querySelectorAll('.delete-todo-button');
+      deleteButtons.forEach(function (button) {
+        button.disabled = false;
+      });
+
       editingIndex = -1; // Reset the editing index
     });
   }
 }
-
 
 
 function deleteTodo(index) {

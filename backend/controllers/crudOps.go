@@ -101,7 +101,7 @@ func DeleteTodoHandler(w http.ResponseWriter, r *http.Request) {
 
 func FetchTodosHandler(w http.ResponseWriter, r *http.Request) {
 	// Fetch all todos from the database
-	rows, err := db.GetDB().Query("SELECT id, title, completed, created_at FROM " + db.TableName)
+	rows, err := db.GetDB().Query("SELECT id, title, completed, created_at, updated_at FROM " + db.TableName)
 	if err != nil {
 		writeJSONResponse(w, http.StatusInternalServerError, map[string]interface{}{
 			"error": "Failed to fetch todos",
@@ -113,7 +113,7 @@ func FetchTodosHandler(w http.ResponseWriter, r *http.Request) {
 	todoList := []models.Todo{}
 	for rows.Next() {
 		var todo models.Todo
-		err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.CreatedAt)
+		err := rows.Scan(&todo.ID, &todo.Title, &todo.Completed, &todo.CreatedAt, &todo.UpdatedAt)
 		if err != nil {
 			continue
 		}
