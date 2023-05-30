@@ -16,42 +16,63 @@ function renderTodoList() {
   });
 }
 
+// Event listener for the add todo button click
+var addTodoButton = document.getElementById('add-todo-button');
+addTodoButton.addEventListener('click', createTodo);
+
 function editTodo(index) {
   var todo = todos[index];
   todoInput.value = todo.title;
-  var updateButton = document.createElement('button');
-  updateButton.textContent = 'Update';
-  updateButton.className = 'todo-button';
-  updateButton.addEventListener('click', function () {
-    var newTitle = todoInput.value.trim();
-    if (newTitle !== '') {
-      // Make the AJAX PUT request to update the todo
-      var updateXhr = new XMLHttpRequest();
-      updateXhr.open('PUT', '/todo/' + todo.id);
-      updateXhr.setRequestHeader('Content-Type', 'application/json');
-      updateXhr.onload = function () {
-        if (updateXhr.status === 200) {
-          // Todo updated successfully
-          todo.title = newTitle;
-          renderTodoList();
-        } else {
-          // Failed to update todo
-          console.error('Failed to update todo');
-        }
-      };
-      var updatedTodo = {
-        id: todo.id,
-        title: newTitle,
-        completed: todo.completed
-      };
-      updateXhr.send(JSON.stringify(updatedTodo));
-    }
-    todoInput.value = '';
-    todoInput.parentNode.removeChild(updateButton);
-  });
-  todoInput.parentNode.appendChild(updateButton);
-}
 
+  // Check if an update button already exists
+  var updateButton = document.querySelector('.update-todo-button');
+  if (!updateButton) {
+    // Disable the add todo button
+    addTodoButton.disabled = true;
+
+    // Create a new update button if it doesn't exist
+    updateButton = document.createElement('button');
+    updateButton.textContent = 'Update';
+    updateButton.className = 'todo-button update-todo-button';
+
+    updateButton.addEventListener('click', function () {
+      var newTitle = todoInput.value.trim();
+      if (newTitle !== '') {
+        // Make the AJAX PUT request to update the todo
+        var updateXhr = new XMLHttpRequest();
+        updateXhr.open('PUT', '/todo/' + todo.id);
+        updateXhr.setRequestHeader('Content-Type', 'application/json');
+        updateXhr.onload = function () {
+          if (updateXhr.status === 200) {
+            // Todo updated successfully
+            todo.title = newTitle;
+            renderTodoList();
+          } else {
+            // Failed to update todo
+            console.error('Failed to update todo');
+          }
+          // Enable the add todo button after updating
+          addTodoButton.disabled = false;
+        };
+
+        var updatedTodo = {
+          id: todo.id,
+          title: newTitle,
+          completed: todo.completed
+        };
+
+        updateXhr.send(JSON.stringify(updatedTodo));
+      }
+
+      todoInput.value = '';
+      todoInput.parentNode.removeChild(updateButton);
+      // Enable the add todo button after canceling the edit
+      addTodoButton.disabled = false;
+    });
+
+    todoInput.parentNode.appendChild(updateButton);
+  }
+}
 
 function deleteTodo(index) {
   var todo = todos[index];
@@ -139,7 +160,3 @@ function fetchTodos() {
 // Call fetchTodos() when the page is loaded to retrieve todos
 fetchTodos();
 
-
-// Event listener for the add todo button click
-var addTodoButton = document.getElementById('add-todo-button');
-addTodoButton.addEventListener('click', createTodo);
