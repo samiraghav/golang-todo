@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -88,12 +89,25 @@ func createTable() error {
 	return nil
 }
 
+func GetCurrentTimeIST() time.Time {
+	now := time.Now().UTC()
+
+	// Add 5 hours and 30 minutes for IST offset
+	istOffset := time.Hour*5 + time.Minute*30
+	nowIST := now.Add(istOffset)
+
+	return nowIST
+}
+
 func AddTodoTask(title string, completed bool) (int64, error) {
 	// Prepare the SQL query for inserting a new todo task
-	query := "INSERT INTO " + TableName + " (title, completed, created_at, updated_at) VALUES (?, ?, NOW(), NULL)"
+	query := "INSERT INTO " + TableName + " (title, completed, created_at, updated_at) VALUES (?, ?, ?, NULL)"
+
+	// Get the current time in IST
+	nowIST := GetCurrentTimeIST()
 
 	// Execute the query and retrieve the inserted ID
-	result, err := database.Exec(query, title, completed)
+	result, err := database.Exec(query, title, completed, nowIST)
 	if err != nil {
 		return 0, err
 	}
@@ -109,10 +123,13 @@ func AddTodoTask(title string, completed bool) (int64, error) {
 
 func UpdateTodoTask(id int64, title string, completed bool) error {
 	// Prepare the SQL query for updating the todo task
-	query := "UPDATE " + TableName + " SET title = ?, completed = ?, updated_at = NOW() WHERE id = ?"
+	query := "UPDATE " + TableName + " SET title = ?, completed = ?, updated_at = ? WHERE id = ?"
+
+	// Get the current time in IST
+	nowIST := GetCurrentTimeIST()
 
 	// Execute the query
-	_, err := database.Exec(query, title, completed, id)
+	_, err := database.Exec(query, title, completed, nowIST, id)
 	if err != nil {
 		return err
 	}
