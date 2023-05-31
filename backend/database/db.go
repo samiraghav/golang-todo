@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -91,13 +90,10 @@ func createTable() error {
 
 func AddTodoTask(title string, completed bool) (int64, error) {
 	// Prepare the SQL query for inserting a new todo task
-	query := "INSERT INTO " + TableName + " (title, completed, created_at) VALUES (?, ?, ?)"
-
-	// Get the current time in Indian Standard Time (IST)
-	now := time.Now().UTC().Add(time.Hour * 5).Add(time.Minute * 30) // Adding 5 hours and 30 minutes for IST offset
+	query := "INSERT INTO " + TableName + " (title, completed, created_at, updated_at) VALUES (?, ?, NOW(), NOW())"
 
 	// Execute the query and retrieve the inserted ID
-	result, err := database.Exec(query, title, completed, now)
+	result, err := database.Exec(query, title, completed)
 	if err != nil {
 		return 0, err
 	}
