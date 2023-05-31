@@ -178,4 +178,3 @@ function fetchTodos() {
 
 // Call fetchTodos() when the page is loaded to retrieve todos
 fetchTodos();
-
