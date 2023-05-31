@@ -90,7 +90,7 @@ func createTable() error {
 
 func AddTodoTask(title string, completed bool) (int64, error) {
 	// Prepare the SQL query for inserting a new todo task
-	query := "INSERT INTO " + TableName + " (title, completed, created_at) VALUES (?, ?, NOW())"
+	query := "INSERT INTO " + TableName + " (title, completed, created_at, updated_at) VALUES (?, ?, NOW(), NOW())"
 
 	// Execute the query and retrieve the inserted ID
 	result, err := database.Exec(query, title, completed)
@@ -105,17 +105,4 @@ func AddTodoTask(title string, completed bool) (int64, error) {
 	}
 
 	return insertedID, nil
-}
-
-func UpdateTodoTask(id int64, title string, completed bool) error {
-	// Prepare the SQL query for updating a todo task
-	query := "UPDATE " + TableName + " SET title = ?, completed = ?, updated_at = NOW() WHERE id = ?"
-
-	// Execute the query to update the todo task
-	_, err := database.Exec(query, title, completed, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
