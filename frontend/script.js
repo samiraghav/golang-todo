@@ -76,6 +76,7 @@ function editTodo(index) {
       todoInput.parentNode.replaceChild(addTodoButton, updateButton);
       // Enable the add todo button after canceling the edit
       addTodoButton.disabled = false;
+<<<<<<< HEAD
 
       // Enable the delete buttons of all todos
       var deleteButtons = document.querySelectorAll('.delete-todo-button');
@@ -84,6 +85,8 @@ function editTodo(index) {
       });
 
       editingIndex = -1; // Reset the editing index
+=======
+>>>>>>> parent of 49933b2 (Update script.js)
     });
   }
 }
