@@ -75,8 +75,7 @@ func createTable() error {
 		id INT AUTO_INCREMENT PRIMARY KEY,
 		title VARCHAR(255),
 		completed BOOLEAN,
-		created_at DATETIME,
-		updated_at DATETIME
+		created_at DATETIME
 	)`
 
 	// Execute the query
@@ -105,17 +104,4 @@ func AddTodoTask(title string, completed bool) (int64, error) {
 	}
 
 	return insertedID, nil
-}
-
-func UpdateTodoTask(id int64, title string, completed bool) error {
-	// Prepare the SQL query for updating the todo task
-	query := "UPDATE " + TableName + " SET title = ?, completed = ?, updated_at = NOW() WHERE id = ?"
-
-	// Execute the query to update the todo task
-	_, err := database.Exec(query, title, completed, id)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
